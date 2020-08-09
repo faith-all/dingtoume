@@ -4,6 +4,8 @@
 ## 1. 工程初始化
 > 初始化mysql数据源： src/main/data/init.sql (会初始化数据库和表)
 >
+> 增量更新脚本：src/main/data/update.sql (修正表结构以及demo数据)
+>
 > 数据模型参考：src/main/data/mysql.mwb （使用MySQLWorkbench打开）
 >
 ## 2. 配置数据源
