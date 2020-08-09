@@ -4,15 +4,16 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-    <classPathEntry location="/Users/qiyan/.m2/repository/mysql/mysql-connector-java/5.1.42/mysql-connector-java-5.1.42.jar"/>
+    <classPathEntry location="/Users/yuanhongbo/.m2/repository/mysql/mysql-connector-java/8.0.16/mysql-connector-java-8.0.11.jar"/>
     <context id="my" targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="false"/>
             <property name="suppressAllComments" value="false"/>
         </commentGenerator>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://dingtou.me:3306/hbyuan" userId="hbyuan"
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/hbyuan"
+                        userId="hbyuan"
                         password="dingtou.me"/>
 
         <javaModelGenerator targetPackage="me.dingtou.domain"
@@ -71,13 +72,13 @@
         </table>
         -->
 
-        <!--
+
         <table tableName="user_fund_group" domainObjectName="UserFundGroup"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true">
         </table>
-        -->
+
 
         <!--
         <table tableName="trade_calendar" domainObjectName="TradeCalendar"

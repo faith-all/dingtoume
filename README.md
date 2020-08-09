@@ -9,10 +9,10 @@
 ## 2. 配置数据源
 > 修改application.properties中的数据源配置
 ```
-spring.datasource.url = jdbc:mysql://www.dingtou.me:3306/hbyuan?useUnicode=true&characterEncoding=UTF-8
+spring.datasource.url = jdbc:mysql://127.0.0.1:3306/hbyuan?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=Asia/Shanghai&useSSL=false
 spring.datasource.username = hbyuan
 spring.datasource.password = dingtou.me
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.max-idle=10
 spring.datasource.max-wait=10000
 spring.datasource.min-idle=5

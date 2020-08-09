@@ -1,5 +1,6 @@
 package me.dingtou.service.impl;
 
+import me.dingtou.constant.FundGroupExtraEnum;
 import me.dingtou.domain.*;
 import me.dingtou.exception.BizException;
 import me.dingtou.mapper.FundDailyPriceMapper;
@@ -8,6 +9,7 @@ import me.dingtou.mapper.TradeCalendarMapper;
 import me.dingtou.mapper.UserFundGroupMapper;
 import me.dingtou.service.FundGroupService;
 import me.dingtou.service.FundPullService;
+import me.dingtou.util.FundGroupExtraUtils;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,21 +67,21 @@ public class FundGroupServiceImpl implements FundGroupService {
     public List<UserFundGroup> queryFundGroupByUserId(long userId) {
         UserFundGroupExample query = new UserFundGroupExample();
         query.createCriteria()
-            .andUserIdEqualTo(userId)
-            .andStatusEqualTo(1);
+                .andUserIdEqualTo(userId)
+                .andStatusEqualTo(1);
         return userFundGroupMapper.selectByExample(query);
     }
 
     @Override
     public UserFundGroup queryFundGroup(long fundGroupId) {
-        return userFundGroupMapper.selectByPrimaryKey((int)fundGroupId);
+        return userFundGroupMapper.selectByPrimaryKey((int) fundGroupId);
     }
 
     @Override
     public List<FundGroupDetail> queryFundGroupDetails(long fundGroupId) {
         FundGroupDetailExample query = new FundGroupDetailExample();
         query.createCriteria()
-            .andFundGroupIdEqualTo((int)fundGroupId);
+                .andFundGroupIdEqualTo((int) fundGroupId);
         return fundGroupDetailMapper.selectByExample(query);
     }
 
@@ -102,8 +104,8 @@ public class FundGroupServiceImpl implements FundGroupService {
             //查询最后生成的任务
             TradeCalendarExample lastQuery = new TradeCalendarExample();
             lastQuery.createCriteria()
-                .andFundGroupIdEqualTo(fundGroup.getFundGroupId())
-                .andTradeDateLessThanOrEqualTo(nearbyDate);
+                    .andFundGroupIdEqualTo(fundGroup.getFundGroupId())
+                    .andTradeDateLessThanOrEqualTo(nearbyDate);
             lastQuery.setOrderByClause("trade_date desc limit 1");
             List<TradeCalendar> lastList = tradeCalendarMapper.selectByExample(lastQuery);
             if (null != lastList && !lastList.isEmpty()) {
@@ -149,6 +151,8 @@ public class FundGroupServiceImpl implements FundGroupService {
      * 新增根据均线浮动目标金额功能
      */
     private int calculateTargetPrice(UserFundGroup fundGroup, int lastTargetPrice, int increment) {
+        int targetPrice;
+
         List<FundGroupDetail> groupDetails = queryFundGroupDetails(fundGroup.getFundGroupId());
         if (null == groupDetails || groupDetails.isEmpty()) {
             return lastTargetPrice + increment;
@@ -195,8 +199,15 @@ public class FundGroupServiceImpl implements FundGroupService {
                     finalAdjustIncrement = newAdjustIncrement;
                 }
             }
-            return lastTargetPrice + finalAdjustIncrement.intValue();
+            targetPrice = lastTargetPrice + finalAdjustIncrement.intValue();
+        } else {
+            targetPrice = lastTargetPrice + increment;
         }
-        return lastTargetPrice + increment;
+
+        int maxPrice = FundGroupExtraUtils.getMaxPrice(fundGroup.getExtra());
+        if (maxPrice >= 0 && targetPrice > maxPrice) {
+            targetPrice = maxPrice;
+        }
+        return targetPrice;
     }
 }
